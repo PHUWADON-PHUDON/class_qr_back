@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model lavel {
+  id Int @id @default(autoincrement())
+  lavel Int
+  sublavel Int
+  studentlavel studentlavel[]
+  subject subject[]
+  studentcheck studentcheck[]
+}
+
+model studentlavel { //fk of lavel
+  id Int @id @default(autoincrement())
+  lavel_id Int
+  lavel lavel @relation(fields: [lavel_id], references: [id])
+  studentid String
+  name String
+  lastname String
+  studentcheck studentcheck[]
+}
+
+model subject { //fk of lavel
+  id Int @id @default(autoincrement())
+  lavel_id Int
+  lavel lavel @relation(fields: [lavel_id], references: [id])
+  subjectname String
+  datecount datecount[]
+  studentcheck studentcheck[]
+}
+
+model datecount { //fk of subject
+  id Int @id @default(autoincrement())
+  subjectid Int
+  subject subject @relation(fields: [subjectid], references: [id])
+  date String
+  studentcheck studentcheck[]
+}
+
+model checkstatus {
+  id Int @id @default(autoincrement())
+  statusname String
+  studentcheck studentcheck[]
+}
+
+model studentcheck {
+  id Int @id @default(autoincrement())
+  lavel_id Int
+  subjectid Int
+  datecountid Int
+  studentid Int
+  checkstatusid Int
+  lavel lavel @relation(fields: [lavel_id], references: [id])
+  subject subject @relation(fields: [subjectid], references: [id])
+  datecount datecount @relation(fields: [datecountid], references: [id])
+  studentlavel studentlavel @relation(fields: [studentid], references: [id])
+  checkstatus checkstatus @relation(fields: [checkstatusid], references: [id])
+}
