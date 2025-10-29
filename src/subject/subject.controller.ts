@@ -1,4 +1,4 @@
-import { Controller,Get,Post,Body,Param } from '@nestjs/common';
+import { Controller,Get,Post,Body,Param, Patch } from '@nestjs/common';
 import { SubjectService } from './subject.service';
 
 interface subjectType {
@@ -53,5 +53,10 @@ export class SubjectController {
   @Post("createnewstudenthistory")
   createnewstudenthistory(@Body() data:any) {
     return this.subjectService.createnewstudenthistory(data);
+  }
+
+  @Patch("updatehistory/:id")
+  updatehistory(@Param("id") id:string,@Body() data:{checkid:string}) {
+    return this.subjectService.updatehistory(parseInt(id),parseInt(data.checkid));
   }
 }

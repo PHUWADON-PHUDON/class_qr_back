@@ -134,11 +134,11 @@ export class SubjectService {
             );
         
             const grouped = _.groupBy(gethistory, (item) => item.datecount.date);
-                    
-            const result = Object.entries(grouped).map(([date, records]) => ({
-              date,
-              records,
-            }));
+            const result = Object.entries(grouped).map(([date, records]) => {
+                const checkamount = records.filter((r) => r.checkstatusid === 1 || r.checkstatusid === 3).length;
+
+                return { date, records, checkamount };
+            });
 
             return(result);
         }
@@ -160,6 +160,17 @@ export class SubjectService {
                     }});
                 }));
             }
+
+            return;
+        }
+        catch(err) {
+            throw new BadRequestException(err.message);
+        }
+    }
+
+    async updatehistory(id:number,checkid:number) {
+        try{
+            const update = await this.prisma.studentcheck.update({where:{id:id},data:{checkstatusid:checkid}});
 
             return;
         }
