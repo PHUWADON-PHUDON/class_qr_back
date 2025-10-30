@@ -126,6 +126,8 @@ export class LavelService {
 
     async deletestudent(id:number) {
         try{
+            await this.prisma.studentcheck.deleteMany({where:{studentid:id}});
+
             return await this.prisma.studentlavel.delete({where:{id:id}});
         }
         catch(err) {
