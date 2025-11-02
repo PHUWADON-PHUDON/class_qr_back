@@ -1,4 +1,4 @@
-import { Controller,Get,Post,Body,Param, Patch } from '@nestjs/common';
+import { Controller,Get,Post,Body,Param, Patch, Delete } from '@nestjs/common';
 import { SubjectService } from './subject.service';
 
 interface subjectType {
@@ -58,5 +58,10 @@ export class SubjectController {
   @Patch("updatehistory/:id")
   updatehistory(@Param("id") id:string,@Body() data:{checkid:string}) {
     return this.subjectService.updatehistory(parseInt(id),parseInt(data.checkid));
+  }
+
+  @Delete("deletesubject/:id")
+  deletesubject(@Param("id") id:string) {
+    return this.subjectService.deletesubject(parseInt(id));
   }
 }

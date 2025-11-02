@@ -178,4 +178,16 @@ export class SubjectService {
             throw new BadRequestException(err.message);
         }
     }
+
+    async deletesubject(id:number) {
+        try{
+            await this.prisma.studentcheck.deleteMany({where:{subjectid:id}});
+            await this.prisma.datecount.deleteMany({where:{subjectid:id}});
+            
+            return await this.prisma.subject.delete({where:{id:id}});
+        }
+        catch(err) {
+            throw new BadRequestException(err.message);
+        }
+    }
 }
