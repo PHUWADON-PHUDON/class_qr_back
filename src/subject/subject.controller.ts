@@ -64,4 +64,9 @@ export class SubjectController {
   deletesubject(@Param("id") id:string) {
     return this.subjectService.deletesubject(parseInt(id));
   }
+
+  @Get("getforexcel/:id")
+  getforexcel(@Param("id") id:string) {
+    return this.subjectService.getforexcel(parseInt(id));
+  }
 }
