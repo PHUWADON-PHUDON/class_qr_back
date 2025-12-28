@@ -150,15 +150,18 @@ export class SubjectService {
     async createnewstudenthistory(data:any) {
         try{
             if (data.data.length > 0) {
-                const createhistory = await Promise.all(data.data.map(async (e:any) => {
-                    return await this.prisma.studentcheck.create({data:{
-                        lavel_id:e.lavelid,
-                        subjectid:e.subjectid,
-                        datecountid:e.datecountid,
-                        studentid:e.studentid,
-                        checkstatusid:e.checkid
-                    }});
-                }));
+                const findStudentId = await this.prisma.studentcheck.findMany({where:{studentid:data.data[0].studentid}});
+                if (findStudentId.length <= 0) {
+                    const createhistory = await Promise.all(data.data.map(async (e:any) => {
+                        return await this.prisma.studentcheck.create({data:{
+                            lavel_id:e.lavelid,
+                            subjectid:e.subjectid,
+                            datecountid:e.datecountid,
+                            studentid:e.studentid,
+                            checkstatusid:e.checkid
+                        }});
+                    }));
+                }
             }
 
             return;
@@ -185,6 +188,30 @@ export class SubjectService {
             await this.prisma.datecount.deleteMany({where:{subjectid:id}});
             
             return await this.prisma.subject.delete({where:{id:id}});
+        }
+        catch(err) {
+            throw new BadRequestException(err.message);
+        }
+    }
+
+    async getforexcel(id:number) {
+        try{
+            const finddata = await this.prisma.studentcheck.findMany({
+                where:{
+                    subjectid:id
+                },
+                include:{
+                    lavel:true,
+                    subject:true,
+                    datecount:true,
+                    studentlavel:true,
+                    checkstatus:true
+                }
+            });
+
+            const grouped = _.groupBy(finddata, (item) => item.studentlavel.id);
+
+            return(grouped)
         }
         catch(err) {
             throw new BadRequestException(err.message);
